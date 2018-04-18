@@ -3,11 +3,8 @@
   "version": "1.0.0",
   "description": "Stock options open-interest tracker.",
   "main": "index.js",
-  "directories": {
-    "lib": "lib"
-  },
   "scripts": {
-    "fetch": "node ./lib/fetch",
+    "fetch": "node ./scripts/fetch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

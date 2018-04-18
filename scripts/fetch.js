@@ -1,8 +1,10 @@
+'use strict';
+
 const https = require('https');
 const conf = require('../config');
 const util = require('util');
 const fs = require('fs');
-const db = require('./db');
+const db = require('../lib/db');
 
 let token;
 
