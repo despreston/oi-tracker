@@ -1,3 +1,7 @@
+/**
+ * Downloads all available option data from Tradier for a given symbol
+ */
+
 'use strict';
 
 const https = require('https');
@@ -60,18 +64,17 @@ async function getData( symbol, exp ) {
 
 async function saveOptions( options ) {
   ( await db() ).collection('options').insertMany( options );
-  console.log( `✅  Saved options data.` );
 }
 
-async function getLatestExpiration( symbol ) {
+async function getExpirations( symbol ) {
   const opts = {
     ...( await defaultOpts() ),
     path: `/v1/markets/options/expirations?symbol=${symbol}`
   };
 
-  const { expirations: { date: [ latest ] } } = await request( opts );
+  const { expirations: { date: expirations } } = await request( opts );
   console.log('✅  Found the latest options expiration date.');
-  return latest;
+  return expirations;
 }
 
 async function removeOptionsForToday() {
@@ -89,14 +92,18 @@ async function init() {
     // the same day
     await removeOptionsForToday();
 
-    const expiration = await getLatestExpiration( symbol );
-    const { options } = await getData( symbol, expiration );
-    await saveOptions( formatOptionsForDatabase( options.option ) );
-    db.close();
+    for ( let expiration of await getExpirations( symbol ) ) {
+      const { options } = await getData( symbol, expiration );
+      await saveOptions( formatOptionsForDatabase( options.option ) );
+      console.log( `✅  Saved options data for ${expiration}.` );
+    }
+
     console.log('\n');
   } catch ( err ) {
     console.log( '❌  Error: ', err );
   }
+
+  db.close();
 }
 
 init();
