@@ -1,0 +1,26 @@
+{
+  "name": "oi-tracker",
+  "version": "1.0.0",
+  "description": "Stock options open-interest tracker.",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "fetch": "node ./lib/fetch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/despreston/oi-tracker.git"
+  },
+  "author": "Des Preston",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/despreston/oi-tracker/issues"
+  },
+  "homepage": "https://github.com/despreston/oi-tracker#readme",
+  "dependencies": {
+    "mongodb": "3.0.6"
+  }
+}
