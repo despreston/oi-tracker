@@ -1,4 +1,7 @@
 # Dependency directories
 node_modules/
 
+*.cache
+dist
+
 tradier-token
