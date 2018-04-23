@@ -27,7 +27,9 @@
           </thead>
           <tbody>
             <tr v-for="call of calls">
-              <td class="text-center">{{call.strike}}</td>
+              <td class="text-center">
+                <a v-bind:href="'/strikes/' + call.strike">{{call.strike}}</a>
+              </td>
               <td class="text-center">{{call.open_interest}}</td>
               <td class="text-center">
                 <span v-bind:class="changeTextStyle(call.change[1])">
@@ -57,7 +59,9 @@
           </thead>
           <tbody>
             <tr v-for="put of puts">
-              <td class="text-center">{{put.strike}}</td>
+              <td class="text-center">
+                <a v-bind:href="'/' + put._id">{{put.strike}}</a>
+              </td>
               <td class="text-center">{{put.open_interest}}</td>
               <td class="text-center">
                 <span v-bind:class="changeTextStyle(put.change[1])">
@@ -166,6 +170,10 @@ function appendChanges( optionsByStrike ) {
   });
 }
 
+/**
+ * Given a list of options, calculate the difference between today's OI and
+ * the OI from n days ago.
+ */
 function changeBetweenDays( options, daysAgo ) {
   const todayMinusDaysAgo = todayMinusDays( daysAgo ).toDateString();
   const latestOI = options.slice( -1 )[ 0 ].data.open_interest;
@@ -201,8 +209,11 @@ export default {
   watch: {
 
     async selected( newValue ) {
+      const expiration = new Date( newValue );
+      expiration.setUTCHours( 0, 0, 0, 0 );
+
       const url = [ baseUrl, 'options', '?', [
-        `data.expiration_date=${newValue}`,
+        `data.expiration_date=${expiration.toISOString()}`,
         `after=${todayMinusDays( 20 ).toISOString()}`
       ].join('&') ].join('');
 
@@ -225,7 +236,12 @@ export default {
 
   async created() {
     const response = await fetch(`${baseUrl}expirations`);
-    this.expirations = await response.json();
+    const json = await response.json();
+
+    this.expirations = json.map( expiration => {
+      return new Date( expiration ).toUTCString();
+    });
+
     this.selected = this.expirations[ 0 ];
   }
 
