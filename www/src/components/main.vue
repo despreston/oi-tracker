@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-3">
+  <div>
     <h3>DVAX Open Interest</h3>
     <div class="form-inline my-5">
       <label for="expiration">Expiration</label>
@@ -28,7 +28,8 @@
           <tbody>
             <tr v-for="call of calls">
               <td class="text-center">
-                <a v-bind:href="'/strikes/' + call.strike">{{call.strike}}</a>
+                <router-link v-bind:to="'/options/by-symbol/' + call.symbol">  {{call.strike}}
+                </router-link>
               </td>
               <td class="text-center">{{call.open_interest}}</td>
               <td class="text-center">
@@ -60,7 +61,7 @@
           <tbody>
             <tr v-for="put of puts">
               <td class="text-center">
-                <a v-bind:href="'/' + put._id">{{put.strike}}</a>
+                <a v-bind:href="'/options/' + put.symbol">{{put.strike}}</a>
               </td>
               <td class="text-center">{{put.open_interest}}</td>
               <td class="text-center">
@@ -140,7 +141,8 @@ function mutateForTable( options ) {
     groupByStrike,
     appendLatestOpenInterest,
     sortByStrike,
-    appendChanges
+    appendChanges,
+    appendOptionSymbol
   ];
 
   return mutations.reduce( ( arr, fn ) => fn( arr ), options);
@@ -168,6 +170,12 @@ function appendChanges( optionsByStrike ) {
 
     return Object.assign( byStrike, { change } );
   });
+}
+
+function appendOptionSymbol( optionsByStrike ) {
+  return optionsByStrike.map( strike => (
+    Object.assign( strike, { symbol: strike.options[ 0 ].data.symbol } )
+  ));
 }
 
 /**
