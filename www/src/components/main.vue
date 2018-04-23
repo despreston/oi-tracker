@@ -61,7 +61,8 @@
           <tbody>
             <tr v-for="put of puts">
               <td class="text-center">
-                <a v-bind:href="'/options/' + put.symbol">{{put.strike}}</a>
+                <router-link v-bind:to="'/options/by-symbol/' + put.symbol">  {{put.strike}}
+                </router-link>
               </td>
               <td class="text-center">{{put.open_interest}}</td>
               <td class="text-center">
