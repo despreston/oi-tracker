@@ -10,7 +10,12 @@ const util = require('util');
 const fs = require('fs');
 const db = require('../lib/db');
 
-let token;
+let token, collection;
+const today = ( new Date() ).toLocaleString().split(' ')[ 0 ];
+
+async function setCollection() {
+  collection = ( await db() ).collection('options');
+}
 
 function request( opts ) {
   return new Promise( ( resolve, reject ) => {
@@ -26,8 +31,12 @@ function request( opts ) {
 
 function formatOptionsForDatabase( options ) {
   return options.map( option => {
+
     return {
-      data: option,
+      data: {
+        ...option,
+        expiration_date: new Date( option.expiration_date )
+      },
       created_at: new Date()
     }
   });
@@ -63,7 +72,7 @@ async function getData( symbol, exp ) {
 }
 
 async function saveOptions( options ) {
-  ( await db() ).collection('options').insertMany( options );
+  collection.insertMany( options );
 }
 
 async function getExpirations( symbol ) {
@@ -77,20 +86,33 @@ async function getExpirations( symbol ) {
   return expirations;
 }
 
+// Remove option data created today
 async function removeOptionsForToday() {
-  const today = ( new Date() ).toLocaleString().split(' ')[ 0 ];
-  const collection = ( await db() ).collection('options');
-  collection.remove({ created_at: { $gte: new Date( today ) } });
+  await collection.remove({ created_at: { $gte: new Date( today ) } });
+  console.log( `✅  Removed duplicate option data created today.` );
+}
+
+// Remove options that have expired
+async function removeOldOptions() {
+  await collection.remove({
+    'data.expiration_date': { $lt: new Date( today ) }
+  });
+
+  console.log( `✅  Removed expired options.` );
 }
 
 async function init() {
   try {
     const [ ,, symbol ] = process.argv;
+    await setCollection();
+
     console.log( `\nFetching and saving latest options data for ${symbol}...\n` );
 
     // Remove existing identical options data in case script is run twice in
     // the same day
     await removeOptionsForToday();
+
+    await removeOldOptions();
 
     for ( let expiration of await getExpirations( symbol ) ) {
       const { options } = await getData( symbol, expiration );
