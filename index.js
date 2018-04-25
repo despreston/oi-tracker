@@ -5,7 +5,8 @@ const fs = require('fs');
 
 const app = express();
 
-// cors
+app.use( express.static('dist') );
+
 app.use( ( request, response, next ) => {
   response.header( 'Access-Control-Allow-Origin', '*' );
   next();
