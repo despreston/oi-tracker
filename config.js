@@ -10,7 +10,7 @@ module.exports = {
       name: 'oitracker'
     },
     production: {
-      host: ''
+      host: 'localhost',
       port: 27017,
       name: 'oitracker',
       username: 'production',
