@@ -1,0 +1,8 @@
+.DS_Store
+node_modules
+docker-compose.yml
+dist
+.gitignore
+package-lock.json
+README.md
+.cache

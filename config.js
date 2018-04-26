@@ -8,6 +8,11 @@ module.exports = {
       host: 'localhost',
       port: 27017,
       name: 'oitracker'
+    },
+    docker: {
+      host: 'db',
+      port: 27017,
+      name: 'oitracker'
     }
   }
 };
