@@ -5,7 +5,7 @@ WORKDIR /usr/local/oi-tracker
 
 COPY . .
 
-ENV NODE_ENV=docker
+ENV NODE_ENV=production
 ENV NODE_DEBUG=info
 
 RUN npm run build
