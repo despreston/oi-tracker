@@ -8,8 +8,6 @@
 <script>
 import Chart from 'chart.js';
 
-const baseUrl = 'http://localhost:3000/';
-
 const dateFromString = string => new Date( string ).toLocaleDateString();
 
 function createOpenInterestChart( options ) {
@@ -46,11 +44,13 @@ export default {
     }
   },
 
-  async created() {
+  async mounted() {
     const { symbol } = this.$route.params;
+    const url = `${window.baseUrl}options/by-symbol/${symbol}`;
     this.symbol = symbol;
-    const response = await fetch( `${baseUrl}options/by-symbol/${symbol}` );
+    const response = await fetch( url );
     createOpenInterestChart( await response.json() );
   }
+
 }
 </script>

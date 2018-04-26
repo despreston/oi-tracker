@@ -12,9 +12,7 @@ module.exports = {
     production: {
       host: 'localhost',
       port: 27017,
-      name: 'oitracker',
-      username: 'production',
-      password: 'i8EwXyTYb6dYJPZ3'
+      name: 'oitracker'
     }
   }
 };

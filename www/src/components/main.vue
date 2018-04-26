@@ -85,7 +85,6 @@
 </template>
 
 <script>
-const baseUrl = 'http://localhost:3000/';
 
 /**
  * Sorts the options by strike
@@ -221,7 +220,7 @@ export default {
       const expiration = new Date( newValue );
       expiration.setUTCHours( 0, 0, 0, 0 );
 
-      const url = [ baseUrl, 'options', '?', [
+      const url = [ window.baseUrl, 'options', '?', [
         `data.expiration_date=${expiration.toISOString()}`,
         `after=${todayMinusDays( 20 ).toISOString()}`
       ].join('&') ].join('');
@@ -244,7 +243,7 @@ export default {
   },
 
   async created() {
-    const response = await fetch(`${baseUrl}expirations`);
+    const response = await fetch(`${window.baseUrl}expirations`);
     const json = await response.json();
 
     this.expirations = json.map( expiration => {
