@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>{{symbol}}</h3>
+    <h3>{{description}}</h3>
     <canvas id="open_interest" width="300" height="100"></canvas>
   </div>
 </template>
@@ -40,16 +40,16 @@ export default {
 
   data() {
     return {
-      symbol: ''
+      description: ''
     }
   },
 
   async mounted() {
     const { symbol } = this.$route.params;
     const url = `${window.baseUrl}options/by-symbol/${symbol}`;
-    this.symbol = symbol;
-    const response = await fetch( url );
-    createOpenInterestChart( await response.json() );
+    const response = await ( await fetch( url ) ).json();
+    this.description = response.length && response[ 0 ].data.description;
+    createOpenInterestChart( response );
   }
 
 }

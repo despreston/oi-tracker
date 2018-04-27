@@ -1,6 +1,19 @@
 <template>
   <div>
-    <h3>DVAX Open Interest</h3>
+    <h3 class="mb-5">DVAX Open Interest</h3>
+
+    <div class="card">
+      <h5 class="card-header">Couple things</h5>
+      <div class="card-body">
+        <p class="card-text">
+          1. If the <strong>Change</strong> column has a zero value, it might be because theres just not enough data to compare that far back.
+        </p>
+        <p>
+          2. Feel free to click on the <strong>Strike</strong> to check out a more detailed view.
+        </p>
+      </div>
+    </div>
+
     <div class="form-inline my-5">
       <label for="expiration">Expiration</label>
       <select class="ml-2 form-control" name="expiration" v-model="selected">
