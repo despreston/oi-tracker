@@ -15,14 +15,14 @@ async function registerRoutes() {
 }
 
 async function init() {
-  app.use( express.static('dist') );
-
-  await registerRoutes();
-
   app.use( ( request, response, next ) => {
     response.header( 'Access-Control-Allow-Origin', '*' );
     next();
   });
+
+  app.use( express.static('dist') );
+
+  await registerRoutes();
 
   app.listen( conf.port, () => {
     console.log( `Started server at localhost:${conf.port}` );

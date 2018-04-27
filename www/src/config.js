@@ -2,8 +2,8 @@
 
 const config = {
 
-  dev: {
-    url: '/api/'
+  development: {
+    url: 'http://localhost:3000/api/'
   },
 
   production: {
@@ -12,4 +12,4 @@ const config = {
 
 };
 
-export default () => config[ process.env.NODE_ENV || 'dev' ];
+export default () => config[ process.env.NODE_ENV || 'development' ];
