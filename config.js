@@ -9,8 +9,8 @@ module.exports = {
       port: 27017,
       name: 'oitracker'
     },
-    production: {
-      host: 'localhost',
+    docker: {
+      host: 'db',
       port: 27017,
       name: 'oitracker'
     }
