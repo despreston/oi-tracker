@@ -9,6 +9,7 @@ const conf = require('../config');
 const util = require('util');
 const fs = require('fs');
 const db = require('../lib/db');
+const path = require('path');
 
 let token, collection;
 const today = ( new Date() ).toLocaleString().split(' ')[ 0 ];
@@ -48,7 +49,7 @@ function getToken() {
   }
 
   const readFile = util.promisify( fs.readFile );
-  return readFile( 'tradier-token', 'utf8' );
+  return readFile( path.resolve( __dirname, '../tradier-token' ), 'utf8' );
 }
 
 async function defaultOpts() {
@@ -88,17 +89,26 @@ async function getExpirations( symbol ) {
 
 // Remove option data created today
 async function removeOptionsForToday() {
-  await collection.remove({ created_at: { $gte: new Date( today ) } });
-  console.log( `✅  Removed duplicate option data created today.` );
+  const query = {
+    created_at: {
+      $gte: new Date( today )
+    }
+  };
+
+  const { result } = await collection.remove( query );
+  console.log( `✅  Removed ${result.n} duplicate option data created today.` );
 }
 
 // Remove options that have expired
 async function removeOldOptions() {
-  await collection.remove({
-    'data.expiration_date': { $lt: new Date( today ) }
-  });
+  const query = {
+    'data.expiration_date': {
+      $lt: new Date( today )
+    }
+  };
 
-  console.log( `✅  Removed expired options.` );
+  const { result } = await collection.remove( query );
+  console.log( `✅  Removed ${result.n} expired options.` );
 }
 
 async function init() {
