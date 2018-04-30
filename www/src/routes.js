@@ -1,3 +1,5 @@
+'use strict';
+
 import VueRouter from 'vue-router';
 import Vue from 'vue/dist/vue.js';
 

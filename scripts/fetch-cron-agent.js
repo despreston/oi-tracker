@@ -1,6 +1,8 @@
 /**
  * Runs the `fetch` w/ DVAX symbol every 24 hours at midnight.
  */
+'use strict';
+
 const CronJob = require('cron').CronJob;
 const fetch = require('./fetch');
 
