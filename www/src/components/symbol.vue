@@ -6,8 +6,6 @@
 </template>
 
 <script>
-import Chart from 'chart.js';
-
 const dateFromString = string => new Date( string ).toLocaleDateString();
 
 function createOpenInterestChart( options ) {
