@@ -264,9 +264,15 @@ export default {
     async selected( newValue ) {
       const expiration = new Date( newValue );
       expiration.setUTCHours( 0, 0, 0, 0 );
+      const expirationISOString = expiration.toISOString();
+
+      this.$router.push({
+        path: '/',
+        query: { expiration: expirationISOString }
+      });
 
       const url = [ window.baseUrl, 'options', '?', [
-        `data.expiration_date=${expiration.toISOString()}`,
+        `data.expiration_date=${expirationISOString}`,
         `after=${todayMinusDays( 20 ).toISOString()}`
       ].join('&') ].join('');
 
@@ -296,12 +302,10 @@ export default {
   async created() {
     const response = await fetch( `${window.baseUrl}expirations` );
     const json = await response.json();
-
-    this.expirations = json.map( expiration => {
-      return new Date( expiration ).toUTCString();
-    });
-
-    this.selected = this.expirations[ 0 ];
+    const utc = str => new Date( str ).toUTCString();
+    this.expirations = json.map( utc );
+    const { expiration } = this.$route.query;
+    this.selected = expiration ? utc( expiration ) : this.expirations[ 0 ];
   }
 
 }
