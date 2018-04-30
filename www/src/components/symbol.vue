@@ -24,6 +24,7 @@ function createOpenInterestChart( options ) {
     data: {
       labels: options.map( option => dateFromString( option.created_at ) ),
       datasets: [{
+        lineTension: 0,
         fill: false,
         label: 'Open interest',
         borderColor: 'rgb(54, 162, 235)',
