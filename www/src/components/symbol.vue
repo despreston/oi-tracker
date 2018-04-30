@@ -6,8 +6,6 @@
 </template>
 
 <script>
-const dateFromString = string => new Date( string ).toLocaleDateString();
-
 function createOpenInterestChart( options ) {
   new Chart( document.getElementById('open_interest'), {
     type: 'line',
@@ -25,7 +23,9 @@ function createOpenInterestChart( options ) {
       }
     },
     data: {
-      labels: options.map( option => dateFromString( option.created_at ) ),
+      labels: options.map( option => (
+        new Date( option.created_at ).toLocaleDateString()
+      )),
       datasets: [{
         lineTension: 0,
         fill: false,

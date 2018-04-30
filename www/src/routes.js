@@ -1,7 +1,7 @@
 'use strict';
 
 import VueRouter from 'vue-router';
-import Vue from 'vue/dist/vue.js';
+import Vue from 'vue';
 
 import MainIndex from './components/main.vue';
 import SymbolIndex from './components/symbol.vue';
