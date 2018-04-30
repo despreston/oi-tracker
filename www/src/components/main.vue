@@ -14,6 +14,8 @@
       </div>
     </div>
 
+    <canvas id="chart" width="300" height="100"></canvas>
+
     <div class="form-inline my-5">
       <label for="expiration">Expiration</label>
       <select class="ml-2 form-control" name="expiration" v-model="selected">
@@ -207,6 +209,36 @@ function changeBetweenDays( options, daysAgo ) {
   return previousOption ? latestOI - previousOption.data.open_interest : 0;
 }
 
+function createOpenInterestChart( data ) {
+  new Chart( document.getElementById('chart'), {
+    type: 'line',
+    options: {
+      legend: {
+        display: false
+      },
+      title: {
+        display: true,
+        text: 'Total Open Interest',
+        fontSize: 18
+      },
+      label: {
+        display: false
+      }
+    },
+    data: {
+      labels: data.map( ( { _id } ) => _id ),
+      datasets: [{
+        lineTension: 0,
+        fill: false,
+        label: 'Open interest',
+        borderColor: 'rgb(54, 162, 235)',
+        backgroundColor: 'rgb(54, 162, 235)',
+        data: data.map( ( { open_interest } ) => open_interest )
+      }]
+    }
+  });
+}
+
 export default {
 
   data() {
@@ -255,8 +287,14 @@ export default {
 
   },
 
+  async mounted() {
+    const url = `${window.baseUrl}options/daily-open-interest`;
+    const response = await ( await fetch( url ) ).json();
+    createOpenInterestChart( response );
+  },
+
   async created() {
-    const response = await fetch(`${window.baseUrl}expirations`);
+    const response = await fetch( `${window.baseUrl}expirations` );
     const json = await response.json();
 
     this.expirations = json.map( expiration => {

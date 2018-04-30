@@ -12,6 +12,9 @@ function createOpenInterestChart( options ) {
   new Chart( document.getElementById('open_interest'), {
     type: 'line',
     options: {
+      legend: {
+        display: false
+      },
       title: {
         display: true,
         text: 'Open interest over time',
