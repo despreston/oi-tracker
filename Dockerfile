@@ -10,4 +10,4 @@ ENV NODE_DEBUG=info
 
 RUN npm run build
 
-CMD ./scripts/full-run.sh
+CMD npm run full-run

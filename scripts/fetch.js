@@ -88,11 +88,12 @@ async function getExpirations( symbol ) {
 }
 
 // Remove option data created today
-async function removeOptionsForToday() {
+async function removeOptionsForToday( symbol ) {
   const query = {
     created_at: {
       $gte: new Date( today )
-    }
+    },
+    'data.underlying': symbol.toUpperCase()
   };
 
   const { result } = await collection.remove( query );
@@ -100,29 +101,29 @@ async function removeOptionsForToday() {
 }
 
 // Remove options that have expired
-async function removeOldOptions() {
+async function removeOldOptions( symbol ) {
   const query = {
     'data.expiration_date': {
       $lt: new Date( today )
-    }
+    },
+    'data.underlying': symbol.toUpperCase()
   };
 
   const { result } = await collection.remove( query );
   console.log( `✅  Removed ${result.n} expired options.` );
 }
 
-async function init() {
+async function init( symbol, closeDB = true ) {
   try {
-    const [ ,, symbol ] = process.argv;
     await setCollection();
 
     console.log( `\nFetching and saving latest options data for ${symbol}...\n` );
 
     // Remove existing identical options data in case script is run twice in
     // the same day
-    await removeOptionsForToday();
+    await removeOptionsForToday( symbol );
 
-    await removeOldOptions();
+    await removeOldOptions( symbol );
 
     for ( let expiration of await getExpirations( symbol ) ) {
       const { options } = await getData( symbol, expiration );
@@ -135,7 +136,9 @@ async function init() {
     console.log( '❌  Error: ', err );
   }
 
-  db.close();
+  if ( closeDB ) {
+    db.close();
+  }
 }
 
-init();
+module.exports = init;
