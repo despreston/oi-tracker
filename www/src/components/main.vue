@@ -142,7 +142,7 @@ function groupByStrike( options ) {
 function appendLatestOpenInterest( groupedByStrike ) {
   return groupedByStrike.map( obj => {
     return Object.assign( obj, {
-      open_interest: obj.options[ 0 ].data.open_interest
+      open_interest: obj.options.slice( -1 )[ 0 ].data.open_interest
     });
   });
 }
