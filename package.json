@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index",
-    "fetch-cron": "node ./scripts/fetch-cron-manager",
+    "fetch-cron": "node ./scripts/fetch-cron-agent",
     "full-run": "node ./scripts/full-run.js",
     "build": "./scripts/build.sh",
     "test": "echo \"Error: no test specified\" && exit 1"

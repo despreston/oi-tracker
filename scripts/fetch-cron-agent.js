@@ -13,7 +13,7 @@ function onTick() {
 }
 
 new CronJob({
-  cronTime: '0 0 * * 1-5',
+  cronTime: '0 2 * * 1-5',
   onTick,
   onComplete: () => console.log('Finished cron job'),
   startNow: true,
