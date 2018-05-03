@@ -12,7 +12,7 @@ const db = require('../lib/db');
 const path = require('path');
 
 let token, collection;
-const today = ( new Date() ).toLocaleString().split(' ')[ 0 ];
+const today = () => ( new Date() ).toLocaleString().split(' ')[ 0 ];
 
 async function setCollection() {
   collection = ( await db() ).collection('options');
@@ -91,7 +91,7 @@ async function getExpirations( symbol ) {
 async function removeOptionsForToday( symbol ) {
   const query = {
     created_at: {
-      $gte: new Date( today )
+      $gte: new Date( today() )
     },
     'data.underlying': symbol.toUpperCase()
   };
@@ -104,7 +104,7 @@ async function removeOptionsForToday( symbol ) {
 async function removeOldOptions( symbol ) {
   const query = {
     'data.expiration_date': {
-      $lt: new Date( today )
+      $lt: new Date( today() )
     },
     'data.underlying': symbol.toUpperCase()
   };
