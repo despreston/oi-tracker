@@ -168,6 +168,21 @@ function todayMinusDays( days, d = new Date() ) {
 }
 
 /**
+ * Returns the last weekday n days ago
+ */
+function getWeekdayNDaysAgo( n ) {
+  const [ sunday, saturday ] = [ 0, 6 ];
+  let pastDay = todayMinusDays( n );
+
+  while ( [ sunday, saturday ].includes( pastDay.getDay() ) ) {
+    n += 1;
+    pastDay = todayMinusDays( n );
+  }
+
+  return pastDay;
+}
+
+/**
  * Adds the field `changes` to each object.
  * @param { Array }
  */
@@ -195,18 +210,18 @@ function appendOptionSymbol( optionsByStrike ) {
 
 /**
  * Given a list of options, calculate the difference between today's OI and
- * the OI from n days ago.
+ * the OI from n days ago excluding weekends. If there is no option for the
+ * previous day, return zero.
  */
 function changeBetweenDays( options, daysAgo ) {
-  const todayMinusDaysAgo = todayMinusDays( daysAgo ).toDateString();
+  const pastDay = getWeekdayNDaysAgo( daysAgo ).toDateString();
   const latestOI = options.slice( -1 )[ 0 ].data.open_interest;
 
-  const findOptionForDay = day => options.find( option => {
-    return new Date( option.created_at ).toDateString() === todayMinusDaysAgo;
+  const optionForPastDay = options.find( option => {
+    return new Date( option.created_at ).toDateString() === pastDay;
   });
 
-  const previousOption = findOptionForDay( daysAgo );
-  return previousOption ? latestOI - previousOption.data.open_interest : 0;
+  return optionForPastDay ? latestOI - optionForPastDay.data.open_interest : 0;
 }
 
 function createOpenInterestChart( data ) {
